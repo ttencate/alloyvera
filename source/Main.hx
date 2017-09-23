@@ -8,6 +8,8 @@ class Main extends Sprite {
   public function new() {
     super();
 
+    Levels.init();
+
 #if neko
     var level = Std.parseInt(Sys.environment()["level"]);
     if (level > 0 && level <= Levels.ALL.length) {
@@ -15,7 +17,7 @@ class Main extends Sprite {
     }
 #end
 
-    addChild(new FlxGame(320, 200, PlayState, true));
+    addChild(new FlxGame(480, 300, PlayState, true));
     FlxG.scaleMode = new PixelPerfectScaleMode();
 #if neko
     FlxG.plugins.add(new DebugKeys());
@@ -29,6 +31,14 @@ private class DebugKeys extends FlxBasic {
 
     if (FlxG.keys.pressed.ESCAPE) {
       Sys.exit(0);
+    }
+    if (FlxG.keys.pressed.UP && PlayState.currentLevel + 1 < Levels.COUNT) {
+      PlayState.currentLevel++;
+      FlxG.switchState(new PlayState());
+    }
+    if (FlxG.keys.pressed.DOWN && PlayState.currentLevel > 0) {
+      PlayState.currentLevel--;
+      FlxG.switchState(new PlayState());
     }
   }
 }

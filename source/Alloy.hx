@@ -46,25 +46,32 @@ class Alloy {
     return taken;
   }
 
+  public function pureMetal() {
+    var metal = null;
+    for (i in 0...metals.length) {
+      if (amounts[i] > 1e-4) {
+        if (metal != null) return null;
+        metal = metals[i];
+      }
+    }
+    return metal;
+  }
+
   public function equalsIgnoringAmount(other: Alloy) {
     var thisAmount = this.amount;
     var otherAmount = other.amount;
-    trace('Comparing $this ($thisAmount) to $other ($otherAmount)');
     if (thisAmount < 1e-4 || otherAmount < 1e-4) {
-      trace('FAIL on one is empty');
       return false;
     }
     for (i in 0...metals.length) {
       var metal = metals[i];
       if (!eq(other.getAmount(metal) / otherAmount, amounts[i] / thisAmount)) {
-        trace('FAIL on $metal');
         return false;
       }
     }
     for (i in 0...other.metals.length) {
       var metal = other.metals[i];
       if (!eq(this.getAmount(metal) / thisAmount, other.amounts[i] / otherAmount)) {
-        trace('FAIL on $metal');
         return false;
       }
     }
@@ -126,6 +133,17 @@ class Alloy {
         out += ", ";
       }
       out += '${amounts[i]} ${metals[i]}';
+    }
+    return out;
+  }
+
+  public function toLines() {
+    var out = "";
+    for (i in 0...metals.length) {
+      if (out.length > 0) {
+        out += ",\n";
+      }
+      out += '${amounts[i]} part${amounts[i] > 1 ? "s" : ""} ${metals[i]}';
     }
     return out;
   }

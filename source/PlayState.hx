@@ -2,15 +2,16 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.math.FlxMath;
+import flixel.util.FlxColor;
 
 class PlayState extends FlxState {
 
   public static var currentLevel = 0;
 
-  private static inline var BEAKER_BOTTOM_Y = 184;
+  private static inline var BEAKER_BOTTOM_Y = 268;
   private static inline var BEAKER_SEPARATION = 8;
 
   private var level: Level;
@@ -26,6 +27,14 @@ class PlayState extends FlxState {
 
     level = Levels.ALL[currentLevel];
     state = level.startState.clone();
+
+    add(new FlxSprite(AssetPaths.background__png));
+
+    var instructions = new FlxText(level.instructions);
+    instructions.setFormat(AssetPaths.PixeligCursief__ttf, 10, FlxColor.BLACK);
+    instructions.x = FlxG.width - 2 - instructions.width;
+    instructions.y = 0;
+    add(instructions);
 
     add(beakerSprites = new FlxTypedGroup<BeakerSprite>());
     addBeakerSprites(state.beakers);
@@ -63,11 +72,14 @@ class PlayState extends FlxState {
     if (FlxG.mouse.justPressed && hovered != null && !pouring) {
       if (selectedBeaker == null) {
         selectedBeaker = hovered;
+        selectedBeaker.selected = true;
       } else {
         if (hovered == selectedBeaker) {
+          selectedBeaker.selected = false;
           selectedBeaker = null;
         } else {
           pour(selectedBeaker, hovered);
+          selectedBeaker.selected = false;
           selectedBeaker = null;
         }
       }

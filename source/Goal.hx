@@ -13,4 +13,8 @@ class Goal {
     }
     return false;
   }
+
+  public function toString() {
+    return alloy.toLines();
+  }
 }

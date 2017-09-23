@@ -5,12 +5,16 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 
+import openfl.display.BitmapData;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+
 using flixel.util.FlxSpriteUtil;
 
 class BeakerSprite extends FlxGroup {
 
-  private static inline var LITER_WIDTH = 24;
-  private static inline var LITER_HEIGHT = 24;
+  private static inline var LITER_WIDTH = 32;
+  private static inline var LITER_HEIGHT = 32;
 
   private static inline var HOVER_OFFSET_Y = 4;
 
@@ -20,8 +24,11 @@ class BeakerSprite extends FlxGroup {
   public var x(get, set): Float;
   public var y(get, set): Float;
   public var hovered(default, set): Bool = false;
+  public var selected(default, set): Bool = false;
   public var fillFraction(default, set): Float = 0.0;
   public var color(get, set): FlxColor;
+
+  private var contentMask: FlxSprite;
 
   private var content: FlxSprite;
   private var glass: FlxSprite;
@@ -30,6 +37,10 @@ class BeakerSprite extends FlxGroup {
     super();
     this.beaker = beaker;
     computeSize();
+
+    contentMask = new FlxSprite();
+    contentMask.makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, true);
+    drawContentMask();
 
     add(content = new FlxSprite());
     content.makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, true);
@@ -43,18 +54,54 @@ class BeakerSprite extends FlxGroup {
     drawContent();
   }
 
+  private function drawContentMask() {
+    var inputSprite = new FlxSprite(AssetPaths.content_mask__png);
+    ninePatch(inputSprite.graphic.bitmap, contentMask.graphic.bitmap);
+    contentMask.drawRect(16, 16, width - 32, height - 32, FlxColor.WHITE);
+  }
+
   private function drawContent() {
-    content.graphic.bitmap.fillRect(new openfl.geom.Rectangle(0, 0, width, height), FlxColor.TRANSPARENT);
-    var h = Math.round(height * fillFraction);
-    content.drawRect(0, height - h, width, h, color);
+    var y = Math.round(8 + (height - 9) * (1 - fillFraction));
+    content.graphic.bitmap.fillRect(new Rectangle(0, 0, width, height), FlxColor.TRANSPARENT);
+    content.graphic.bitmap.copyPixels(contentMask.graphic.bitmap, new Rectangle(0, y, width, height - y), new Point(0, y));
   }
 
   private function drawGlass() {
-    glass.drawRect(0.5, 0.5, width - 1.5, height - 1.5, FlxColor.TRANSPARENT, {thickness: 1, color: FlxColor.WHITE});
+    var inputSprite = new FlxSprite(AssetPaths.beaker__png);
+    ninePatch(inputSprite.graphic.bitmap, glass.graphic.bitmap);
+
     var text = new FlxText('${beaker.size}', 8);
     text.setFormat(AssetPaths.PixeligCursief__ttf, 10);
-    glass.stamp(text, Math.round(0.5 * (glass.width - text.width)), 0);
+    glass.stamp(text, Math.round(0.5 * (glass.width - text.width)), 6);
+
+    var pureMetal = beaker.content.pureMetal();
+    if (pureMetal != null) {
+      text.text = pureMetal.name;
+      text.color = FlxColor.BLACK;
+      var x = Math.round(0.5 * (glass.width - text.width + 2));
+      var y = Math.round(0.5 * (glass.height - text.height));
+      glass.drawRect(x, y, text.width - 2, text.height, FlxColor.WHITE);
+      glass.stamp(text, x, y);
+    }
+
     text.destroy();
+  }
+
+  private function ninePatch(input: BitmapData, output: BitmapData) {
+    var w = output.width;
+    var h = output.height;
+    output.copyPixels(input, new Rectangle(0, 0, 16, 16), new Point(0, 0));
+    output.copyPixels(input, new Rectangle(48, 0, 16, 16), new Point(w - 16, 0));
+    output.copyPixels(input, new Rectangle(0, 48, 16, 16), new Point(0, h - 16));
+    output.copyPixels(input, new Rectangle(48, 48, 16, 16), new Point(w - 16, h - 16));
+    for (x in 0...Std.int(width / LITER_WIDTH - 1)) {
+      output.copyPixels(input, new Rectangle(16, 0, 32, 16), new Point(16 + x * 32, 0));
+      output.copyPixels(input, new Rectangle(16, 48, 32, 16), new Point(16 + x * 32, h - 16));
+    }
+    for (y in 0...Std.int(height / LITER_HEIGHT - 1)) {
+      output.copyPixels(input, new Rectangle(0, 16, 16, 32), new Point(0, 16 + y * 32));
+      output.copyPixels(input, new Rectangle(48, 16, 16, 32), new Point(w - 16, 16 + y * 32));
+    }
   }
 
   public function containsPoint(x: Float, y: Float) {
@@ -108,13 +155,22 @@ class BeakerSprite extends FlxGroup {
     return glass.y = content.y = y;
   }
 
+  private var glassTween: FlxTween;
+  private var contentTween: FlxTween;
+
   private function set_hovered(hovered: Bool): Bool {
-    if (this.hovered != hovered) {
-      var y = hovered ? HOVER_OFFSET_Y : 0;
-      FlxTween.tween(glass.offset, {y: y}, 0.2, {ease: FlxEase.quadOut});
-      FlxTween.tween(content.offset, {y: y}, 0.2, {ease: FlxEase.quadOut});
-    }
     return this.hovered = hovered;
+  }
+
+  private function set_selected(selected: Bool): Bool {
+    if (this.selected != selected) {
+      var y = selected ? HOVER_OFFSET_Y : 0;
+      if (glassTween != null) glassTween.cancel();
+      if (contentTween != null) contentTween.cancel();
+      glassTween = FlxTween.tween(glass.offset, {y: y}, 0.2, {ease: FlxEase.quadOut});
+      contentTween = FlxTween.tween(content.offset, {y: y}, 0.2, {ease: FlxEase.quadOut});
+    }
+    return this.selected = selected;
   }
 
   private function set_fillFraction(fillFraction: Float) {
