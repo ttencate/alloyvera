@@ -12,6 +12,17 @@ class Levels {
         new Goal(2, new Alloy().set(Metal.IRON, 1).set(Metal.ZINC, 1)),
       ],
     },
+    { 
+      startState: new State([
+        new Beaker(12, new Alloy().set(Metal.IRON, 10)),
+        new Beaker(3),
+        new Beaker(2),
+        new Beaker(12, new Alloy().set(Metal.ZINC, 10)),
+      ]),
+      goals: [
+        new Goal(2, new Alloy().set(Metal.IRON, 1).set(Metal.ZINC, 1)),
+      ],
+    },
   ];
 
 }

@@ -1,5 +1,6 @@
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
@@ -50,6 +51,10 @@ class BeakerSprite extends FlxGroup {
 
   private function drawGlass() {
     glass.drawRect(0.5, 0.5, width - 1.5, height - 1.5, FlxColor.TRANSPARENT, {thickness: 1, color: FlxColor.WHITE});
+    var text = new FlxText('${beaker.size}', 8);
+    text.color = FlxColor.WHITE;
+    glass.stamp(text, Math.round(0.5 * (glass.width - text.width)), 0);
+    text.destroy();
   }
 
   public function containsPoint(x: Float, y: Float) {

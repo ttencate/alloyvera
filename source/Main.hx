@@ -7,6 +7,14 @@ import openfl.display.Sprite;
 class Main extends Sprite {
   public function new() {
     super();
+
+#if neko
+    var level = Std.parseInt(Sys.environment()["level"]);
+    if (level > 0 && level <= Levels.ALL.length) {
+      PlayState.currentLevel = level - 1;
+    }
+#end
+
     addChild(new FlxGame(320, 200, PlayState, true));
     FlxG.scaleMode = new PixelPerfectScaleMode();
 #if neko
