@@ -76,12 +76,7 @@ class PlayState extends FlxState {
 
   private function pour(from: BeakerSprite, to: BeakerSprite) {
     pouring = true;
-    trace("Before", state);
-    from.beaker.pour(to.beaker);
-    trace("After", state);
-    from.redraw();
-    to.redraw();
-    endPour();
+    from.pour(to, endPour);
   }
 
   private function endPour() {
@@ -90,7 +85,6 @@ class PlayState extends FlxState {
   }
 
   private function checkWin() {
-    trace(state.beakers[level.targetBeaker].content, level.targetAlloy);
     if (state.beakers[level.targetBeaker].content.equals(level.targetAlloy)) {
       trace("WIN");
       over = true;

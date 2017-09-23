@@ -19,6 +19,8 @@ class BeakerSprite extends FlxGroup {
   public var x(get, set): Float;
   public var y(get, set): Float;
   public var hovered(default, set): Bool = false;
+  public var fillFraction(default, set): Float = 0.0;
+  public var color(get, set): FlxColor;
 
   private var content: FlxSprite;
   private var glass: FlxSprite;
@@ -30,17 +32,20 @@ class BeakerSprite extends FlxGroup {
 
     add(content = new FlxSprite());
     content.makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, true);
-    drawContent();
 
     add(glass = new FlxSprite());
     glass.makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, true);
     drawGlass();
+
+    fillFraction = beaker.fillFraction;
+    color = beaker.content.color;
+    drawContent();
   }
 
   private function drawContent() {
     content.graphic.bitmap.fillRect(new openfl.geom.Rectangle(0, 0, width, height), FlxColor.TRANSPARENT);
-    var h = Math.round(content.height * beaker.content.amount / beaker.size);
-    content.drawRect(0, content.height - h, content.width, h, beaker.content.color);
+    var h = Math.round(height * fillFraction);
+    content.drawRect(0, height - h, width, h, color);
   }
 
   private function drawGlass() {
@@ -51,8 +56,23 @@ class BeakerSprite extends FlxGroup {
     return x >= this.x && x < this.x + this.width && y >= this.y && y < this.y + this.height;
   }
 
-  public function redraw() {
-    drawContent();
+  public function pour(into: BeakerSprite, onComplete: Void -> Void) {
+    this.beaker.pour(into.beaker);
+    this.animate(onComplete);
+    into.animate();
+  }
+
+  private function animate(?onComplete: Void -> Void) {
+    var duration = 1.0;
+    FlxTween.tween(this, {fillFraction: beaker.fillFraction}, duration, {
+      ease: FlxEase.sineInOut,
+      onComplete: onComplete == null ? null : function(_) { onComplete(); },
+    });
+    if (fillFraction == 0) {
+      color = beaker.content.color;
+    } else if (beaker.fillFraction != 0) {
+      FlxTween.color(content, duration, content.color, beaker.content.color, {ease: FlxEase.sineInOut});
+    }
   }
 
   private function computeSize() {
@@ -88,4 +108,14 @@ class BeakerSprite extends FlxGroup {
     }
     return this.hovered = hovered;
   }
+
+  private function set_fillFraction(fillFraction: Float) {
+    this.fillFraction = fillFraction;
+    drawContent();
+    return fillFraction;
+  }
+
+  private function get_color() { return content.color; }
+
+  private function set_color(color: FlxColor) { return content.color = color; }
 }

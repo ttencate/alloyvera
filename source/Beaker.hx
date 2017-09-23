@@ -3,6 +3,8 @@ class Beaker {
   public var size(default, null): Int;
   public var content: Alloy;
 
+  public var fillFraction(get, never): Float;
+
   public function new(size: Int, ?content: Alloy) {
     if (content == null) content = new Alloy();
     this.size = size;
@@ -22,4 +24,6 @@ class Beaker {
   public function toString() {
     return '$size($content)';
   }
+
+  private function get_fillFraction() { return content.amount / size; }
 }
