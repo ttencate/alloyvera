@@ -18,7 +18,11 @@ class Beaker {
   public function pour(into: Beaker) {
     var amount = Math.min(into.size - into.content.amount, this.content.amount);
     var alloy = content.take(amount);
+    if (alloy.amount < 1e-4) {
+      return false;
+    }
     into.content.add(alloy);
+    return true;
   }
 
   public function toString() {

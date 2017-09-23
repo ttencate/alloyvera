@@ -55,7 +55,7 @@ class PlayState extends FlxState {
     for (beakerSprite in beakerSprites) {
       var contains = beakerSprite.containsPoint(FlxG.mouse.x, FlxG.mouse.y);
       beakerSprite.hovered = !pouring && !over && (beakerSprite == selectedBeaker || contains);
-      if (contains) {
+      if (contains && !pouring && !over) {
         hovered = beakerSprite;
       }
     }
@@ -75,8 +75,9 @@ class PlayState extends FlxState {
   }
 
   private function pour(from: BeakerSprite, to: BeakerSprite) {
-    pouring = true;
-    from.pour(to, endPour);
+    if (from.pour(to, endPour)) {
+      pouring = true;
+    }
   }
 
   private function endPour() {
@@ -85,10 +86,15 @@ class PlayState extends FlxState {
   }
 
   private function checkWin() {
+    trace(state);
     for (goal in level.goals) {
       if (!goal.isComplete(state)) return;
     }
-    trace("WIN");
+    trace('Won level $currentLevel');
     over = true;
+    if (currentLevel + 1 < Levels.COUNT) {
+      currentLevel++;
+      FlxG.switchState(new PlayState());
+    }
   }
 }

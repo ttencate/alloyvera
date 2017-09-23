@@ -46,14 +46,27 @@ class Alloy {
     return taken;
   }
 
-  public function equals(other: Alloy) {
+  public function equalsIgnoringAmount(other: Alloy) {
+    var thisAmount = this.amount;
+    var otherAmount = other.amount;
+    trace('Comparing $this ($thisAmount) to $other ($otherAmount)');
+    if (thisAmount < 1e-4 || otherAmount < 1e-4) {
+      trace('FAIL on one is empty');
+      return false;
+    }
     for (i in 0...metals.length) {
       var metal = metals[i];
-      if (!eq(other.getAmount(metal), amounts[i])) return false;
+      if (!eq(other.getAmount(metal) / otherAmount, amounts[i] / thisAmount)) {
+        trace('FAIL on $metal');
+        return false;
+      }
     }
     for (i in 0...other.metals.length) {
       var metal = other.metals[i];
-      if (!eq(this.getAmount(metal), other.amounts[i])) return false;
+      if (!eq(this.getAmount(metal) / thisAmount, other.amounts[i] / otherAmount)) {
+        trace('FAIL on $metal');
+        return false;
+      }
     }
     return true;
   }
