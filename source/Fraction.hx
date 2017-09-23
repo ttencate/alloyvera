@@ -7,7 +7,11 @@ abstract Fraction(Impl) {
   public function add(other: Fraction) {
     var a = cast(this, Impl);
     var b = cast(other, Impl);
-    return new Fraction(a.numerator * b.denominator + a.numerator * b.denominator, a.denominator * b.denominator);
+    return new Fraction(a.numerator * b.denominator + b.numerator * a.denominator, a.denominator * b.denominator);
+  }
+
+  public function toFloat() {
+    return this.numerator / this.denominator;
   }
 
   public function toString() {
