@@ -39,7 +39,7 @@ class BeakerSprite extends FlxGroup {
 
   private function drawContent() {
     content.graphic.bitmap.fillRect(new openfl.geom.Rectangle(0, 0, width, height), FlxColor.TRANSPARENT);
-    var h = Math.round(content.height * beaker.content.amount.toFloat() / beaker.size);
+    var h = Math.round(content.height * beaker.content.amount / beaker.size);
     content.drawRect(0, content.height - h, content.width, h, beaker.content.color);
   }
 

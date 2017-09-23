@@ -14,9 +14,8 @@ class Beaker {
   }
 
   public function pour(into: Beaker) {
-    var amount = new Fraction(into.size).sub(into.content.amount).min(this.content.amount);
+    var amount = Math.min(into.size - into.content.amount, this.content.amount);
     var alloy = content.take(amount);
-    trace(amount, alloy);
     into.content.add(alloy);
   }
 

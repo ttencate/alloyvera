@@ -2,14 +2,14 @@ import flixel.util.FlxColor;
 
 class Alloy {
 
-  public var amount(get, never): Fraction;
+  public var amount(get, never): Float;
   public var color(get, never): FlxColor;
 
-  // Using Map<Metal, Fraction> gives crashes:
+  // Using Map<Metal, Float> gives crashes:
   // Uncaught exception - Invalid operation (+)
   // Weird Haxe.
   private var metals: Array<Metal> = [];
-  private var amounts: Array<Fraction> = [];
+  private var amounts: Array<Float> = [];
 
   public function new() {
   }
@@ -23,31 +23,50 @@ class Alloy {
       var metal = other.metals[i];
       var amount = other.amounts[i];
       var j = findOrAdd(metal);
-      amounts[j] = amounts[j].add(amount);
+      amounts[j] += amount;
     }
     return this;
   }
 
-  public function set(metal: Metal, amount: Int) {
-    return setFraction(metal, new Fraction(amount));
-  }
-
-  public function setFraction(metal: Metal, amount: Fraction) {
+  public function set(metal: Metal, amount: Float) {
     amounts[findOrAdd(metal)] = amount;
     return this;
   }
 
-  public function take(amount: Fraction) {
-    var f = amount.div(this.amount);
+  public function take(amount: Float) {
+    var f = amount / this.amount;
     var taken = new Alloy();
     for (i in 0...metals.length) {
       var metal = metals[i];
       var amount = amounts[i];
-      var takeAmount = amount.mul(f);
-      taken.setFraction(metal, takeAmount);
-      amounts[i] = amounts[i].sub(takeAmount);
+      var takeAmount = amount * f;
+      taken.set(metal, takeAmount);
+      amounts[i] -= takeAmount;
     }
     return taken;
+  }
+
+  public function equals(other: Alloy) {
+    for (i in 0...metals.length) {
+      var metal = metals[i];
+      if (!eq(other.getAmount(metal), amounts[i])) return false;
+    }
+    for (i in 0...other.metals.length) {
+      var metal = other.metals[i];
+      if (!eq(this.getAmount(metal), other.amounts[i])) return false;
+    }
+    return true;
+  }
+
+  private function eq(a: Float, b: Float) {
+    return Math.abs(a - b) < 1e-4;
+  }
+
+  public function getAmount(metal: Metal) {
+    for (i in 0...metals.length) {
+      if (metals[i] == metal) return amounts[i];
+    }
+    return 0.0;
   }
 
   private function findOrAdd(metal: Metal) {
@@ -55,14 +74,14 @@ class Alloy {
       if (metals[i] == metal) return i;
     }
     metals.push(metal);
-    amounts.push(new Fraction(0));
+    amounts.push(0.0);
     return metals.length - 1;
   }
 
   private function get_amount() {
-    var amount = new Fraction(0);
+    var amount = 0.0;
     for (fraction in amounts) {
-      amount = amount.add(fraction);
+      amount += fraction;
     }
     return amount;
   }
@@ -73,7 +92,7 @@ class Alloy {
     var b = 0.0;
     var sum = 0.0;
     for (i in 0...metals.length) {
-      var f = amounts[i].toFloat();
+      var f = amounts[i];
       var c = metals[i].color;
       r += f * c.redFloat;
       g += f * c.greenFloat;

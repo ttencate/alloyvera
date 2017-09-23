@@ -19,6 +19,7 @@ class PlayState extends FlxState {
   private var beakerSprites: FlxTypedGroup<BeakerSprite>;
   private var selectedBeaker: BeakerSprite;
   private var pouring = false;
+  private var over = false;
 
   override public function create() {
     super.create();
@@ -53,7 +54,7 @@ class PlayState extends FlxState {
     var hovered: BeakerSprite = null;
     for (beakerSprite in beakerSprites) {
       var contains = beakerSprite.containsPoint(FlxG.mouse.x, FlxG.mouse.y);
-      beakerSprite.hovered = !pouring && (beakerSprite == selectedBeaker || contains);
+      beakerSprite.hovered = !pouring && !over && (beakerSprite == selectedBeaker || contains);
       if (contains) {
         hovered = beakerSprite;
       }
@@ -80,6 +81,19 @@ class PlayState extends FlxState {
     trace("After", state);
     from.redraw();
     to.redraw();
+    endPour();
+  }
+
+  private function endPour() {
     pouring = false;
+    checkWin();
+  }
+
+  private function checkWin() {
+    trace(state.beakers[level.targetBeaker].content, level.targetAlloy);
+    if (state.beakers[level.targetBeaker].content.equals(level.targetAlloy)) {
+      trace("WIN");
+      over = true;
+    }
   }
 }
