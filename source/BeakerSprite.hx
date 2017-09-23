@@ -1,19 +1,24 @@
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 
 using flixel.util.FlxSpriteUtil;
 
 class BeakerSprite extends FlxGroup {
 
-  private var LITER_WIDTH = 32;
-  private var LITER_HEIGHT = 32;
+  private static inline var LITER_WIDTH = 32;
+  private static inline var LITER_HEIGHT = 32;
+
+  private static inline var HOVER_OFFSET_Y = 4;
 
   public var beaker(default, null): Beaker;
   public var width(default, null): Float;
   public var height(default, null): Float;
   public var x(get, set): Float;
   public var y(get, set): Float;
+  public var hovered(default, set): Bool = false;
 
   private var content: FlxSprite;
   private var glass: FlxSprite;
@@ -33,12 +38,21 @@ class BeakerSprite extends FlxGroup {
   }
 
   private function drawContent() {
+    content.graphic.bitmap.fillRect(new openfl.geom.Rectangle(0, 0, width, height), FlxColor.TRANSPARENT);
     var h = Math.round(content.height * beaker.content.amount.toFloat() / beaker.size);
     content.drawRect(0, content.height - h, content.width, h, beaker.content.color);
   }
 
   private function drawGlass() {
     glass.drawRect(0.5, 0.5, width - 1.5, height - 1.5, FlxColor.TRANSPARENT, {thickness: 1, color: FlxColor.WHITE});
+  }
+
+  public function containsPoint(x: Float, y: Float) {
+    return x >= this.x && x < this.x + this.width && y >= this.y && y < this.y + this.height;
+  }
+
+  public function redraw() {
+    drawContent();
   }
 
   private function computeSize() {
@@ -64,5 +78,14 @@ class BeakerSprite extends FlxGroup {
 
   private function set_y(y: Float): Float {
     return glass.y = content.y = y;
+  }
+
+  private function set_hovered(hovered: Bool): Bool {
+    if (this.hovered != hovered) {
+      var y = hovered ? HOVER_OFFSET_Y : 0;
+      FlxTween.tween(glass.offset, {y: y}, 0.2, {ease: FlxEase.quadOut});
+      FlxTween.tween(content.offset, {y: y}, 0.2, {ease: FlxEase.quadOut});
+    }
+    return this.hovered = hovered;
   }
 }

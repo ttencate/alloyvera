@@ -14,15 +14,40 @@ class Alloy {
   public function new() {
   }
 
-  public function add(metal: Metal, amount: Fraction) {
-    var i = findOrAdd(metal);
-    amounts[i] = amounts[i].add(amount);
+  public function clone() {
+    return new Alloy().add(this);
+  }
+
+  public function add(other: Alloy) {
+    for (i in 0...other.metals.length) {
+      var metal = other.metals[i];
+      var amount = other.amounts[i];
+      var j = findOrAdd(metal);
+      amounts[j] = amounts[j].add(amount);
+    }
     return this;
   }
 
   public function set(metal: Metal, amount: Int) {
-    amounts[findOrAdd(metal)] = new Fraction(amount);
+    return setFraction(metal, new Fraction(amount));
+  }
+
+  public function setFraction(metal: Metal, amount: Fraction) {
+    amounts[findOrAdd(metal)] = amount;
     return this;
+  }
+
+  public function take(amount: Fraction) {
+    var f = amount.div(this.amount);
+    var taken = new Alloy();
+    for (i in 0...metals.length) {
+      var metal = metals[i];
+      var amount = amounts[i];
+      var takeAmount = amount.mul(f);
+      taken.setFraction(metal, takeAmount);
+      amounts[i] = amounts[i].sub(takeAmount);
+    }
+    return taken;
   }
 
   private function findOrAdd(metal: Metal) {

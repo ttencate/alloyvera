@@ -1,29 +1,4 @@
-abstract Fraction(Impl) {
-
-  public function new(numerator: Int, denominator: Int = 1) {
-    this = new Impl(numerator, denominator);
-  }
-
-  public function add(other: Fraction) {
-    var a = cast(this, Impl);
-    var b = cast(other, Impl);
-    return new Fraction(a.numerator * b.denominator + b.numerator * a.denominator, a.denominator * b.denominator);
-  }
-
-  public function toFloat() {
-    return this.numerator / this.denominator;
-  }
-
-  public function toString() {
-    if (this.denominator == 1) {
-      return '${this.numerator}';
-    } else {
-      return '${this.numerator}/${this.denominator}';
-    }
-  }
-}
-
-private class Impl {
+class Fraction {
 
   public var numerator(default, null): Int;
   public var denominator(default, null): Int;
@@ -32,6 +7,42 @@ private class Impl {
     this.numerator = numerator;
     this.denominator = denominator;
     simplify();
+  }
+
+  public function add(other: Fraction) {
+    return new Fraction(this.numerator * other.denominator + other.numerator * this.denominator, this.denominator * other.denominator);
+  }
+
+  public function sub(other: Fraction) {
+    return new Fraction(this.numerator * other.denominator - other.numerator * this.denominator, this.denominator * other.denominator);
+  }
+
+  public function mul(other: Fraction) {
+    return new Fraction(this.numerator * other.numerator, this.denominator * other.denominator);
+  }
+
+  public function div(other: Fraction) {
+    return new Fraction(this.numerator * other.denominator, this.denominator * other.numerator);
+  }
+
+  public function min(other: Fraction) {
+    return lessThan(other) ? this : other;
+  }
+
+  public function lessThan(other: Fraction) {
+    return this.numerator * other.denominator < other.numerator * this.denominator;
+  }
+
+  public function toFloat() {
+    return numerator / denominator;
+  }
+
+  public function toString() {
+    if (denominator == 1) {
+      return '${numerator}';
+    } else {
+      return '${numerator}/${denominator}';
+    }
   }
 
   private function simplify() {
@@ -47,5 +58,4 @@ private class Impl {
     numerator = Std.int(numerator / gcd);
     denominator = Std.int(denominator / gcd);
   }
-
 }

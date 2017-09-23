@@ -14,15 +14,20 @@ class PlayState extends FlxState {
   private static inline var BEAKER_SEPARATION = 8;
 
   private var level: Level;
+
+  private var state: State;
   private var beakerSprites: FlxTypedGroup<BeakerSprite>;
+  private var selectedBeaker: BeakerSprite;
+  private var pouring = false;
 
   override public function create() {
     super.create();
 
     level = Levels.ALL[currentLevel];
+    state = level.startState.clone();
 
     add(beakerSprites = new FlxTypedGroup<BeakerSprite>());
-    addBeakerSprites(level.startState.beakers);
+    addBeakerSprites(state.beakers);
   }
 
   private function addBeakerSprites(beakers: Array<Beaker>) {
@@ -44,5 +49,37 @@ class PlayState extends FlxState {
 
   override public function update(elapsed: Float) {
     super.update(elapsed);
+
+    var hovered: BeakerSprite = null;
+    for (beakerSprite in beakerSprites) {
+      var contains = beakerSprite.containsPoint(FlxG.mouse.x, FlxG.mouse.y);
+      beakerSprite.hovered = !pouring && (beakerSprite == selectedBeaker || contains);
+      if (contains) {
+        hovered = beakerSprite;
+      }
+    }
+
+    if (FlxG.mouse.justPressed && hovered != null && !pouring) {
+      if (selectedBeaker == null) {
+        selectedBeaker = hovered;
+      } else {
+        if (hovered == selectedBeaker) {
+          selectedBeaker = null;
+        } else {
+          pour(selectedBeaker, hovered);
+          selectedBeaker = null;
+        }
+      }
+    }
+  }
+
+  private function pour(from: BeakerSprite, to: BeakerSprite) {
+    pouring = true;
+    trace("Before", state);
+    from.beaker.pour(to.beaker);
+    trace("After", state);
+    from.redraw();
+    to.redraw();
+    pouring = false;
   }
 }

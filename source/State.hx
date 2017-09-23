@@ -7,6 +7,14 @@ class State {
     this.beakers = beakers;
   }
 
+  public function clone() {
+    var beakers = [];
+    for (beaker in this.beakers) {
+      beakers.push(beaker.clone());
+    }
+    return new State(beakers);
+  }
+
   public function toString() {
     var out = "";
     for (beaker in beakers) {
