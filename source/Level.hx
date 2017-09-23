@@ -1,5 +1,4 @@
 typedef Level = {
   startState: State,
-  targetBeaker: Int,
-  targetAlloy: Alloy,
+  goals: Array<Goal>,
 }

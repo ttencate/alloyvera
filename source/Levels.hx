@@ -8,8 +8,9 @@ class Levels {
         new Beaker(2),
         new Beaker(12, new Alloy().set(Metal.ZINC, 10)),
       ]),
-      targetBeaker: 2,
-      targetAlloy: new Alloy().set(Metal.IRON, 1).set(Metal.ZINC, 1),
+      goals: [
+        new Goal(2, new Alloy().set(Metal.IRON, 1).set(Metal.ZINC, 1)),
+      ],
     },
   ];
 

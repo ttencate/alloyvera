@@ -85,9 +85,10 @@ class PlayState extends FlxState {
   }
 
   private function checkWin() {
-    if (state.beakers[level.targetBeaker].content.equals(level.targetAlloy)) {
-      trace("WIN");
-      over = true;
+    for (goal in level.goals) {
+      if (!goal.isComplete(state)) return;
     }
+    trace("WIN");
+    over = true;
   }
 }
