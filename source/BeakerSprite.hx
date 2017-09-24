@@ -17,7 +17,7 @@ class BeakerSprite extends FlxGroup {
   private static inline var LITER_WIDTH = 32;
   private static inline var LITER_HEIGHT = 32;
 
-  private static inline var HOVER_OFFSET_Y = 4;
+  private static inline var SELECTED_OFFSET_Y = 8;
 
   private static inline var PADDING_TOP = 8;
   private static inline var PADDING_BOTTOM = 1;
@@ -165,6 +165,8 @@ class BeakerSprite extends FlxGroup {
       bubble.revive();
     }
 
+    bubble.speed = FlxG.random.float(15, 30);
+    bubble.amplitude = FlxG.random.float(0, 3);
     bubble.baseX = FlxG.random.float(x + PADDING_SIDE + bubble.width + bubble.amplitude, x + width - PADDING_SIDE - bubble.width - bubble.amplitude);
     bubble.y = FlxG.random.float(y + PADDING_TOP + (height - PADDING_TOP - PADDING_BOTTOM) * (1 - fillFraction), y + height - PADDING_BOTTOM - bubble.height);
     bubble.update(0);
@@ -223,7 +225,7 @@ class BeakerSprite extends FlxGroup {
 
   private function set_selected(selected: Bool): Bool {
     if (this.selected != selected) {
-      var y = selected ? HOVER_OFFSET_Y : 0;
+      var y = selected ? SELECTED_OFFSET_Y : 0;
       if (glassTween != null) glassTween.cancel();
       if (contentTween != null) contentTween.cancel();
       glassTween = FlxTween.tween(glass.offset, {y: y}, 0.2, {ease: FlxEase.quadOut});

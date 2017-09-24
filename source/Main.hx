@@ -17,12 +17,15 @@ class Main extends Sprite {
     }
 #end
 
-    addChild(new FlxGame(480, 300, PlayState, true));
+    addChild(new FlxGame(480, 300, null, true));
     FlxG.scaleMode = new PixelPerfectScaleMode();
-    FlxG.camera.pixelPerfectRender = true;
+    FlxG.signals.stateSwitched.add(function() {
+      FlxG.camera.pixelPerfectRender = true;
+    });
 #if neko
     FlxG.plugins.add(new DebugKeys());
 #end
+    FlxG.switchState(new PlayState());
   }
 }
 

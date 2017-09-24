@@ -1,6 +1,7 @@
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.ui.FlxUIButton;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
@@ -38,6 +39,18 @@ class PlayState extends FlxState {
 
     add(beakerSprites = new FlxTypedGroup<BeakerSprite>());
     addBeakerSprites(state.beakers);
+
+    var uiGroup = new FlxGroup();
+    add(uiGroup);
+
+    var restartButton = new FlxUIButton(0, 0, "Restart", restart, true);
+    restartButton.x = 0.5 * (FlxG.width - restartButton.width);
+    restartButton.y = FlxG.height - restartButton.height - 4;
+    uiGroup.add(restartButton);
+  }
+
+  private function restart() {
+    FlxG.switchState(new PlayState());
   }
 
   private function addBeakerSprites(beakers: Array<Beaker>) {
