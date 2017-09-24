@@ -2,8 +2,8 @@
 <project>
   <!-- _________________________ Application Settings _________________________ -->
 
-  <app title="Alloy Vera" file="alloyvera" main="Main" version="0.0.1" company="Frozen Fractal" />
-  <meta title="Alloy Vera" description="A game made in 48 hours for the first Alakajam game jam" package="com.frozenfractal.alloyvera" version="1.0.0" company="Frozen Fractal" />
+  <app title="Mixium" file="mixium" main="Main" version="0.0.1" company="Frozen Fractal" />
+  <meta title="Mixium" description="A game made in 48 hours for the first Alakajam game jam" package="com.frozenfractal.mixium" version="1.0.0" company="Frozen Fractal" />
 
   <!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
     or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
