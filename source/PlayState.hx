@@ -148,6 +148,23 @@ class PlayState extends FlxState {
 
     add(new Book(level.completionText, 1.0));
 
+    var item = new FlxSprite();
+    item.loadGraphic(AssetPaths.items__png, true, 16, 16);
+    item.animation.add("item", [level.itemIndex]);
+    item.animation.play("item");
+    item.scale.set(4, 4);
+    item.x = beaker.x + beaker.width / 2 - item.scale.x * item.width / 2;
+    item.y = beaker.y + beaker.height / 2 - item.scale.y * item.height / 2;
+    FlxTween.tween(item, {
+          x: FlxG.width / 2 - (110 + 20) / 2 - item.scale.x * item.width / 2,
+          y: FlxG.height / 2 - item.scale.y * item.height / 2
+        }, 2.0, {
+          ease: FlxEase.quadInOut,
+        });
+    item.scale.set(1, 1);
+    FlxTween.tween(item.scale, {x: 4, y: 4}, 2.0, {ease: FlxEase.backOut});
+    add(item);
+
     var overlay = new FlxSprite();
     overlay.makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE, true);
     FlxTween.tween(overlay, {alpha: 0}, 0.3, {

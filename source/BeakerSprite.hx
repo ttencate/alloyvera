@@ -149,9 +149,9 @@ class BeakerSprite extends FlxGroup {
       particle.loadGraphic(AssetPaths.poof__png, true, 15, 15);
       particle.x = FlxG.random.float(x + PADDING_SIDE, x + width - particle.width - PADDING_SIDE);
       particle.y = FlxG.random.float(y + PADDING_TOP + (height - PADDING_TOP - PADDING_BOTTOM) * (1 - fillFraction), y + height - PADDING_BOTTOM - particle.height);
-      particle.velocity.x = FlxG.random.float(-100, 100);
-      particle.velocity.y = FlxG.random.float(-100, 100);
-      particle.animation.add("poof", [0, 1, 2, 3], 5, false);
+      particle.velocity.x = FlxG.random.float(-50, 50);
+      particle.velocity.y = FlxG.random.float(-50, 50);
+      particle.animation.add("poof", [0, 1, 2, 3], 3, false);
       particle.animation.play("poof");
       particle.animation.finishCallback = function(_) {
         remove(particle);

@@ -16,7 +16,7 @@ class Book extends FlxGroup {
     add(book);
 
     var text = new FlxText(FlxG.width / 2 + 20, targetY + 30, 110, contents);
-    text.setFormat(AssetPaths.PixeligCursief__ttf, 10, 0xff191713);
+    text.setFormat(AssetPaths.PixeligCursief__ttf, 10, 0xff191713, CENTER);
     text.alpha = 0;
     FlxTween.tween(text, {alpha: 1}, 1.0, {startDelay: startDelay + 1.0});
     add(text);

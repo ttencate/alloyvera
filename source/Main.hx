@@ -28,7 +28,7 @@ class Main extends Sprite {
     FlxG.plugins.add(new DebugKeys());
 #end
     FlxG.switchState(new PlayState());
-    FlxG.sound.playMusic(AssetPaths.AlloyVera__ogg, 0.5);
+    FlxG.sound.playMusic(AssetPaths.AlloyVera__ogg, 0.2);
   }
 
   private function loadSettings() {
@@ -36,6 +36,7 @@ class Main extends Sprite {
   }
 }
 
+#if neko
 private class DebugKeys extends FlxBasic {
   override public function update(elapsed: Float) {
     super.update(elapsed);
@@ -53,3 +54,4 @@ private class DebugKeys extends FlxBasic {
     }
   }
 }
+#end
