@@ -26,8 +26,8 @@ class BeakerSprite extends FlxGroup {
   public var beaker(default, null): Beaker;
   public var width(default, null): Float;
   public var height(default, null): Float;
-  public var x(get, set): Float;
-  public var y(get, set): Float;
+  public var x(default, set): Float;
+  public var y(default, set): Float;
   public var hovered(default, set): Bool = false;
   public var selected(default, set): Bool = false;
   public var fillFraction(default, set): Float = 0.0;
@@ -142,6 +142,26 @@ class BeakerSprite extends FlxGroup {
     return true;
   }
 
+  public function poof() {
+    var numParticles = Math.round(beaker.content.amount * 10);
+    for (i in 0...numParticles) {
+      var particle = new FlxSprite();
+      particle.loadGraphic(AssetPaths.poof__png, true, 15, 15);
+      particle.x = FlxG.random.float(x + PADDING_SIDE, x + width - particle.width - PADDING_SIDE);
+      particle.y = FlxG.random.float(y + PADDING_TOP + (height - PADDING_TOP - PADDING_BOTTOM) * (1 - fillFraction), y + height - PADDING_BOTTOM - particle.height);
+      particle.velocity.x = FlxG.random.float(-100, 100);
+      particle.velocity.y = FlxG.random.float(-100, 100);
+      particle.animation.add("poof", [0, 1, 2, 3], 5, false);
+      particle.animation.play("poof");
+      particle.animation.finishCallback = function(_) {
+        remove(particle);
+        particle.destroy();
+      };
+      add(particle);
+    }
+    fillFraction = 0;
+  }
+
   override public function update(elapsed: Float) {
     super.update(elapsed);
 
@@ -200,24 +220,19 @@ class BeakerSprite extends FlxGroup {
     }
   }
 
-  private function get_x(): Float { return glass.x; }
-
-  private function get_y(): Float { return glass.y; }
-
   private function set_x(x: Float): Float {
-    if (label != null) label.x = x;
-    if (text != null) text.x = x;
-    return glass.x = content.x = x;
+    this.x = x;
+    updateX();
+    return x;
   }
 
   private function set_y(y: Float): Float {
-    if (label != null) label.y = y;
-    if (text != null) text.y = y;
-    return glass.y = content.y = y;
+    this.y = y;
+    updateY();
+    return y;
   }
 
-  private var glassTween: FlxTween;
-  private var contentTween: FlxTween;
+  private var tween: FlxTween;
 
   private function set_hovered(hovered: Bool): Bool {
     return this.hovered = hovered;
@@ -225,13 +240,32 @@ class BeakerSprite extends FlxGroup {
 
   private function set_selected(selected: Bool): Bool {
     if (this.selected != selected) {
-      var y = selected ? SELECTED_OFFSET_Y : 0;
-      if (glassTween != null) glassTween.cancel();
-      if (contentTween != null) contentTween.cancel();
-      glassTween = FlxTween.tween(glass.offset, {y: y}, 0.2, {ease: FlxEase.quadOut});
-      contentTween = FlxTween.tween(content.offset, {y: y}, 0.2, {ease: FlxEase.quadOut});
+      var y = selected ? -SELECTED_OFFSET_Y : 0;
+      if (tween != null) tween.cancel();
+      tween = FlxTween.tween(this, {offsetY: y}, 0.2, {ease: FlxEase.quadOut});
     }
     return this.selected = selected;
+  }
+
+  public var offsetY(default, set): Float = 0.0;
+
+  private function set_offsetY(offsetY: Float) {
+    this.offsetY = offsetY;
+    updateY();
+    return offsetY;
+  }
+
+  private function updateX() {
+    if (label != null) label.x = x;
+    if (text != null) text.x = x;
+    glass.x = content.x = x;
+  }
+
+  private function updateY() {
+    glass.y = y + offsetY;
+    content.y = y + offsetY;
+    if (label != null) label.y = y + offsetY;
+    if (text != null) text.y = y + offsetY;
   }
 
   private function set_fillFraction(fillFraction: Float) {

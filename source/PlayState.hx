@@ -5,6 +5,8 @@ import flixel.addons.ui.FlxUIButton;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 
@@ -135,11 +137,26 @@ class PlayState extends FlxState {
 
   private function checkWin() {
     trace(state);
-    for (goal in level.goals) {
-      if (!goal.isComplete(state)) return;
+    if (!level.goal.isComplete(state)) {
+      return;
     }
     trace('Won level $currentLevel');
     over = true;
-    add(new Book(level.completionText));
+
+    var beaker = beakerSprites.members[level.goal.beakerIndex(state)];
+    beaker.poof();
+
+    add(new Book(level.completionText, 1.0));
+
+    var overlay = new FlxSprite();
+    overlay.makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE, true);
+    FlxTween.tween(overlay, {alpha: 0}, 0.3, {
+      ease: FlxEase.quadOut,
+      onComplete: function(_) {
+        remove(overlay);
+        overlay.destroy();
+      },
+    });
+    add(overlay);
   }
 }

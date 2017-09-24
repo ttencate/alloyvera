@@ -1,6 +1,6 @@
 typedef Level = {
   startState: State,
-  goals: Array<Goal>,
+  goal: Goal,
   instructions: String,
   completionText: String,
 }

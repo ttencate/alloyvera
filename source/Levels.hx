@@ -9,9 +9,7 @@ class Levels {
         new Beaker(2),
         new Beaker(1),
       ]),
-      goals: [
-        new Goal(new Alloy().set(Metal.CRIMSIUM, 1).set(Metal.BYZANTIUM, 1)),
-      ],
+      goal: new Goal(new Alloy().set(Metal.CRIMSIUM, 1).set(Metal.BYZANTIUM, 1)),
       completionText: "Hello world! We can write long text here because it will be wrapped, methinks.",
     },
 
@@ -23,9 +21,7 @@ class Levels {
         new Beaker(3),
         new Beaker(2),
       ]),
-      goals: [
-        new Goal(new Alloy().set(Metal.AMBERIUM, 1).set(Metal.BYZANTIUM, 1)),
-      ],
+      goal: new Goal(new Alloy().set(Metal.AMBERIUM, 1).set(Metal.BYZANTIUM, 1)),
       completionText: "Hello world! We can write long text here because it will be wrapped, methinks.",
     },
 
@@ -39,9 +35,7 @@ class Levels {
         new Beaker(3),
         new Beaker(2),
       ]),
-      goals: [
-        new Goal(new Alloy().set(Metal.CRIMSIUM, 1).set(Metal.BYZANTIUM, 1).set(Metal.AMBERIUM, 1)),
-      ],
+      goal: new Goal(new Alloy().set(Metal.CRIMSIUM, 1).set(Metal.BYZANTIUM, 1).set(Metal.AMBERIUM, 1)),
       completionText: "Hello world! We can write long text here because it will be wrapped, methinks.",
     },
 
@@ -53,9 +47,7 @@ class Levels {
         new Beaker(4),
         new Beaker(2),
       ]),
-      goals: [
-        new Goal(new Alloy().set(Metal.CARROTIUM, 3).set(Metal.CELESTIUM, 1)),
-      ],
+      goal: new Goal(new Alloy().set(Metal.CARROTIUM, 3).set(Metal.CELESTIUM, 1)),
       completionText: "Hello world! We can write long text here because it will be wrapped, methinks.",
     },
   ];
@@ -65,7 +57,7 @@ class Levels {
   public static function init() {
     for (level in ALL) {
       if (level.instructions == null) {
-        level.instructions = 'To make:\n${level.goals[0]}';
+        level.instructions = 'To make:\n${level.goal}';
       }
     }
   }
