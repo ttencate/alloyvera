@@ -19,6 +19,7 @@ class Main extends Sprite {
 
     addChild(new FlxGame(480, 300, PlayState, true));
     FlxG.scaleMode = new PixelPerfectScaleMode();
+    FlxG.camera.pixelPerfectRender = true;
 #if neko
     FlxG.plugins.add(new DebugKeys());
 #end

@@ -1,3 +1,4 @@
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
@@ -18,6 +19,10 @@ class BeakerSprite extends FlxGroup {
 
   private static inline var HOVER_OFFSET_Y = 4;
 
+  private static inline var PADDING_TOP = 8;
+  private static inline var PADDING_BOTTOM = 1;
+  private static inline var PADDING_SIDE = 1;
+
   public var beaker(default, null): Beaker;
   public var width(default, null): Float;
   public var height(default, null): Float;
@@ -32,6 +37,10 @@ class BeakerSprite extends FlxGroup {
 
   private var content: FlxSprite;
   private var glass: FlxSprite;
+  private var bubbles: FlxTypedGroup<Bubble>;
+  private var labelGroup: FlxGroup;
+  private var label: FlxSprite;
+  private var text: FlxText;
 
   public function new(beaker: Beaker) {
     super();
@@ -52,6 +61,11 @@ class BeakerSprite extends FlxGroup {
     fillFraction = beaker.fillFraction;
     color = beaker.content.color;
     drawContent();
+
+    add(bubbles = new FlxTypedGroup<Bubble>());
+
+    add(labelGroup = new FlxGroup());
+    drawLabel();
   }
 
   private function drawContentMask() {
@@ -61,7 +75,7 @@ class BeakerSprite extends FlxGroup {
   }
 
   private function drawContent() {
-    var y = Math.round(8 + (height - 9) * (1 - fillFraction));
+    var y = Math.round(PADDING_TOP + (height - PADDING_TOP - PADDING_BOTTOM) * (1 - fillFraction));
     content.graphic.bitmap.fillRect(new Rectangle(0, 0, width, height), FlxColor.TRANSPARENT);
     content.graphic.bitmap.copyPixels(contentMask.graphic.bitmap, new Rectangle(0, y, width, height - y), new Point(0, y));
   }
@@ -73,18 +87,28 @@ class BeakerSprite extends FlxGroup {
     var text = new FlxText('${beaker.size}', 8);
     text.setFormat(AssetPaths.PixeligCursief__ttf, 10);
     glass.stamp(text, Math.round(0.5 * (glass.width - text.width)), 6);
+    text.destroy();
+  }
 
+  private function drawLabel() {
     var pureMetal = beaker.content.pureMetal();
     if (pureMetal != null) {
+      text = new FlxText(pureMetal.name, 8);
       text.text = pureMetal.name;
       text.color = FlxColor.BLACK;
-      var x = Math.round(0.5 * (glass.width - text.width + 2));
-      var y = Math.round(0.5 * (glass.height - text.height));
-      glass.drawRect(x, y, text.width - 2, text.height, FlxColor.WHITE);
-      glass.stamp(text, x, y);
-    }
+      var w = Std.int(text.width - 2);
+      var h = Std.int(text.height);
+      text.offset.x = 0.5 * (glass.width - w);
+      text.offset.y = 0.5 * (glass.height - h);
 
-    text.destroy();
+      label = new FlxSprite(text.x, text.y);
+      label.makeGraphic(w, h, FlxColor.WHITE);
+      label.offset.x = text.offset.x;
+      label.offset.y = text.offset.y;
+
+      labelGroup.add(label);
+      labelGroup.add(text);
+    }
   }
 
   private function ninePatch(input: BitmapData, output: BitmapData) {
@@ -115,6 +139,36 @@ class BeakerSprite extends FlxGroup {
     this.animate(onComplete);
     into.animate();
     return true;
+  }
+
+  override public function update(elapsed: Float) {
+    super.update(elapsed);
+
+    var desiredBubbles = Math.round(beaker.content.amount * 5);
+    if (bubbles.countLiving() < desiredBubbles && FlxG.random.bool(10)) {
+      addBubble();
+    }
+    bubbles.forEachAlive(function(bubble) {
+      if (bubble.y < y + PADDING_TOP + (height - PADDING_TOP - PADDING_BOTTOM) * (1 - fillFraction) - bubble.height / 2 + 1) {
+        bubble.kill();
+      }
+    });
+  }
+
+  private function addBubble() {
+    var bubble = bubbles.getFirstDead();
+    if (bubble == null) {
+      bubble = new Bubble();
+      bubbles.add(bubble);
+    } else {
+      bubble.revive();
+    }
+
+    bubble.baseX = FlxG.random.float(x + PADDING_SIDE + bubble.width + bubble.amplitude, x + width - PADDING_SIDE - bubble.width - bubble.amplitude);
+    bubble.y = FlxG.random.float(y + PADDING_TOP + (height - PADDING_TOP - PADDING_BOTTOM) * (1 - fillFraction), y + height - PADDING_BOTTOM - bubble.height);
+    bubble.update(0);
+    bubble.alpha = 0;
+    FlxTween.tween(bubble, {alpha: 0.5}, 0.2);
   }
 
   private function animate(?onComplete: Void -> Void) {
@@ -148,10 +202,14 @@ class BeakerSprite extends FlxGroup {
   private function get_y(): Float { return glass.y; }
 
   private function set_x(x: Float): Float {
+    if (label != null) label.x = x;
+    if (text != null) text.x = x;
     return glass.x = content.x = x;
   }
 
   private function set_y(y: Float): Float {
+    if (label != null) label.y = y;
+    if (text != null) text.y = y;
     return glass.y = content.y = y;
   }
 
