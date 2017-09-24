@@ -70,6 +70,11 @@ class BeakerSprite extends FlxGroup {
     drawLabel();
   }
 
+  public function scaleLabel(scale: Float) {
+    label.scale.set(scale, scale);
+    text.scale.set(scale, scale);
+  }
+
   private function drawContentMask() {
     var inputSprite = new FlxSprite(AssetPaths.content_mask__png);
     ninePatch(inputSprite.graphic.bitmap, contentMask.graphic.bitmap);
@@ -105,14 +110,14 @@ class BeakerSprite extends FlxGroup {
       text = new FlxText(pureMetal.name, 8);
       text.setFormat(AssetPaths.PixeligCursief__ttf, 10);
       text.text = pureMetal.name;
-      text.color = FlxColor.BLACK;
+      text.color = 0xff191713;
       var w = Std.int(text.width - 2);
       var h = Std.int(text.height);
       text.offset.x = -0.5 * (glass.width - w);
       text.offset.y = -0.5 * (glass.height - h);
 
       label = new FlxSprite(text.x, text.y);
-      label.makeGraphic(w, h, FlxColor.WHITE);
+      label.makeGraphic(w, h, 0xffe4ceaa);
       label.offset.x = text.offset.x;
       label.offset.y = text.offset.y;
 
@@ -203,8 +208,8 @@ class BeakerSprite extends FlxGroup {
     FlxTween.tween(bubble, {alpha: 0.5}, 0.2);
   }
 
-  private function animate(?onComplete: Void -> Void) {
-    var duration = 1.0;
+  public function animate(?duration: Float, ?onComplete: Void -> Void) {
+    if (duration == null) duration = 1.0;
     FlxTween.tween(this, {fillFraction: beaker.fillFraction}, duration, {
       ease: FlxEase.sineInOut,
       onComplete: onComplete == null ? null : function(_) { onComplete(); },

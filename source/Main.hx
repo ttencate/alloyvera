@@ -28,8 +28,8 @@ class Main extends Sprite {
 #if neko
     FlxG.plugins.add(new DebugKeys());
 #end
-    FlxG.switchState(new PlayState());
     FlxG.sound.playMusic(AssetPaths.AlloyVera__ogg, 0.2);
+    FlxG.switchState(new MenuState());
   }
 
   private function loadSettings() {

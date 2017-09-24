@@ -1,12 +1,8 @@
 class Levels {
 
   public static var CRIMSIUM = new Metal("crimsium", 0xff990000);
-  public static var LIMIUM = new Metal("limium", 0xffbfff00);
-  public static var AMBERIUM = new Metal("amberium", 0xffffbf00);
   public static var BYZANTIUM = new Metal("byzantium", 0xff702963);
   public static var CELESTIUM = new Metal("celestium", 0xff4997d0);
-  public static var CYANIUM = new Metal("cyanium", 0xff00ffff);
-  public static var FUCHSIUM = new Metal("fuchsium", 0xfff400a1);
 
   public static var CAFFEUM = new Metal("caffeum", 0xff6f4e37);
   public static var CREAMIUM = new Metal("creamium", 0xfffff8e7);
@@ -25,6 +21,11 @@ class Levels {
   public static var ROTTIUM = new Metal("rottium", 0xff556b2f);
   public static var DECAYIUM = new Metal("decayium", 0xff483c32);
   public static var DECOMPOSIUM = new Metal("decomposium", 0xff560319);
+
+  public static var LIMIUM = new Metal("limium", 0xffbfff00);
+  public static var AMBERIUM = new Metal("amberium", 0xffffbf00);
+  public static var CYANIUM = new Metal("cyanium", 0xff00ffff);
+  public static var FUCHSIUM = new Metal("fuchsium", 0xfff400a1);
 
   public static var ALL: Array<Level> = [
     {
@@ -94,6 +95,37 @@ class Levels {
       goal: new Goal(new Alloy().set(ROTTIUM, 2).set(DECAYIUM, 2).set(DECOMPOSIUM, 1)),
       itemIndex: 4,
       completionText: "You have created\n\nMIASMA\n\nIt smells terrible, but allegedly it helps to keep dwarves away. Who'd have thought?",
+    },
+
+    {
+      instructions: null,
+      startState: new State([
+        new Beaker(10, new Alloy().set(LIMIUM, 10)),
+        new Beaker(10, new Alloy().set(AMBERIUM, 10)),
+        new Beaker(10, new Alloy().set(CYANIUM, 10)),
+        new Beaker(10, new Alloy().set(FUCHSIUM, 10)),
+        new Beaker(8),
+        new Beaker(4),
+        new Beaker(3),
+      ]),
+      goal: new Goal(new Alloy().set(LIMIUM, 3).set(AMBERIUM, 2).set(CYANIUM, 2).set(FUCHSIUM, 1)),
+      itemIndex: 5,
+      completionText: "You have created\n\nPALETTIUM\n\nIt hurts your eyes, but once painters get their hands on this stuff, it's going to change the world!",
+    },
+
+    {
+      instructions: null,
+      startState: new State([
+        new Beaker(9, new Alloy().set(BYZANTIUM, 9)),
+        new Beaker(9, new Alloy().set(CELESTIUM, 9)),
+        new Beaker(4, new Alloy().set(CRIMSIUM, 4)),
+        new Beaker(5),
+        new Beaker(5),
+        new Beaker(3),
+      ]),
+      goal: new Goal(new Alloy().set(BYZANTIUM, 6).set(CELESTIUM, 2).set(CRIMSIUM, 1)),
+      itemIndex: 15,
+      completionText: "You have created\n\nCOMPLETIUM,\n\nevery alchemist's ultimate dream. You have achieved world fame and riches beyond imagination!",
     },
   ];
 

@@ -36,9 +36,12 @@ class PlayState extends FlxState {
     add(new FlxSprite(AssetPaths.background__png));
 
     var instructions = new FlxText(level.instructions);
-    instructions.setFormat(AssetPaths.PixeligCursief__ttf, 10, FlxColor.WHITE);
+    instructions.setFormat(AssetPaths.PixeligCursief__ttf, 10, 0xff191713);
     instructions.x = (FlxG.width - instructions.width) / 2;
-    instructions.y = 0;
+    instructions.y = 12;
+    var paper = new FlxSprite(instructions.x - 6, instructions.y - 4);
+    paper.makeGraphic(Std.int(instructions.width) + 12, Std.int(instructions.height) + 8, 0xffe4ceaa);
+    add(paper);
     add(instructions);
 
     add(beakerSprites = new FlxTypedGroup<BeakerSprite>());
