@@ -49,22 +49,24 @@ class BeakerSprite extends FlxGroup {
 
     contentMask = new FlxSprite();
     contentMask.makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, true);
-    drawContentMask();
 
     add(content = new FlxSprite());
     content.makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, true);
+    content.alpha = 0.9;
 
     add(glass = new FlxSprite());
     glass.makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, true);
-    drawGlass();
-
-    fillFraction = beaker.fillFraction;
-    color = beaker.content.color;
-    drawContent();
 
     add(bubbles = new FlxTypedGroup<Bubble>());
 
     add(labelGroup = new FlxGroup());
+
+    fillFraction = beaker.fillFraction;
+    color = beaker.content.color;
+
+    drawContentMask();
+    drawGlass();
+    drawContent();
     drawLabel();
   }
 
@@ -74,9 +76,16 @@ class BeakerSprite extends FlxGroup {
     contentMask.drawRect(16, 16, width - 32, height - 32, FlxColor.WHITE);
   }
 
+  private var lastY = -1;
+
   private function drawContent() {
     var y = Math.round(PADDING_TOP + (height - PADDING_TOP - PADDING_BOTTOM) * (1 - fillFraction));
-    content.graphic.bitmap.fillRect(new Rectangle(0, 0, width, height), FlxColor.TRANSPARENT);
+    if (y == lastY) return;
+    content.fill(FlxColor.TRANSPARENT);
+    // content.stamp(contentMask, 0, 0);
+    // content.graphic.bitmap.fillRect(new Rectangle(0, 0, width, y), FlxColor.RED);
+    // content.drawRect(0, 0, width, y, FlxColor.TRANSPARENT, {thickness: 0}, {blendMode: NORMAL});
+    // contentMask.graphic.undump();
     content.graphic.bitmap.copyPixels(contentMask.graphic.bitmap, new Rectangle(0, y, width, height - y), new Point(0, y));
   }
 

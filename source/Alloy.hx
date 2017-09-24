@@ -122,7 +122,7 @@ class Alloy {
     if (sum > 0.0) {
       return FlxColor.fromRGBFloat(r / sum, g / sum, b / sum);
     } else {
-      return FlxColor.TRANSPARENT;
+      return FlxColor.BLACK;
     }
   }
 

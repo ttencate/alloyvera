@@ -14,7 +14,7 @@ class PlayState extends FlxState {
 
   public static var currentLevel = 0;
 
-  private static inline var BEAKER_BOTTOM_Y = 268;
+  private static inline var BEAKER_BOTTOM_Y = 300 - 64;
   private static inline var BEAKER_SEPARATION = 8;
 
   private var level: Level;
@@ -36,8 +36,8 @@ class PlayState extends FlxState {
     add(new FlxSprite(AssetPaths.background__png));
 
     var instructions = new FlxText(level.instructions);
-    instructions.setFormat(AssetPaths.PixeligCursief__ttf, 10, FlxColor.BLACK);
-    instructions.x = FlxG.width - 2 - instructions.width;
+    instructions.setFormat(AssetPaths.PixeligCursief__ttf, 10, FlxColor.WHITE);
+    instructions.x = (FlxG.width - instructions.width) / 2;
     instructions.y = 0;
     add(instructions);
 
