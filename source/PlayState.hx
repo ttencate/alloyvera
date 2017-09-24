@@ -14,7 +14,7 @@ class PlayState extends FlxState {
 
   public static var currentLevel = 0;
 
-  private static inline var BEAKER_BOTTOM_Y = 300 - 64;
+  private static inline var BEAKER_BOTTOM_Y = 300 - 54;
   private static inline var BEAKER_SEPARATION = 8;
 
   private var level: Level;
