@@ -12,6 +12,7 @@ class Levels {
       goals: [
         new Goal(new Alloy().set(Metal.CRIMSIUM, 1).set(Metal.BYZANTIUM, 1)),
       ],
+      completionText: "Hello world! We can write long text here because it will be wrapped, methinks.",
     },
 
     {
@@ -25,6 +26,7 @@ class Levels {
       goals: [
         new Goal(new Alloy().set(Metal.AMBERIUM, 1).set(Metal.BYZANTIUM, 1)),
       ],
+      completionText: "Hello world! We can write long text here because it will be wrapped, methinks.",
     },
 
     {
@@ -40,6 +42,7 @@ class Levels {
       goals: [
         new Goal(new Alloy().set(Metal.CRIMSIUM, 1).set(Metal.BYZANTIUM, 1).set(Metal.AMBERIUM, 1)),
       ],
+      completionText: "Hello world! We can write long text here because it will be wrapped, methinks.",
     },
 
     {
@@ -53,6 +56,7 @@ class Levels {
       goals: [
         new Goal(new Alloy().set(Metal.CARROTIUM, 3).set(Metal.CELESTIUM, 1)),
       ],
+      completionText: "Hello world! We can write long text here because it will be wrapped, methinks.",
     },
   ];
 

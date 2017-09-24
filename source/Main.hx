@@ -22,10 +22,17 @@ class Main extends Sprite {
     FlxG.signals.stateSwitched.add(function() {
       FlxG.camera.pixelPerfectRender = true;
     });
+    FlxG.autoPause = false;
+    loadSettings();
 #if neko
     FlxG.plugins.add(new DebugKeys());
 #end
     FlxG.switchState(new PlayState());
+    FlxG.sound.playMusic(AssetPaths.AlloyVera__ogg, 0.5);
+  }
+
+  private function loadSettings() {
+    FlxG.sound.muted = (FlxG.save.data.music == false);
   }
 }
 

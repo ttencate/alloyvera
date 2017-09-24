@@ -23,6 +23,8 @@ class PlayState extends FlxState {
   private var pouring = false;
   private var over = false;
 
+  private var musicButton: FlxUIButton;
+
   override public function create() {
     super.create();
 
@@ -47,6 +49,20 @@ class PlayState extends FlxState {
     restartButton.x = 0.5 * (FlxG.width - restartButton.width);
     restartButton.y = FlxG.height - restartButton.height - 4;
     uiGroup.add(restartButton);
+
+    musicButton = new FlxUIButton(0, 0, "Music", toggleMusic, true);
+    musicButton.x = FlxG.width - musicButton.width - 4;
+    musicButton.y = FlxG.height - musicButton.height - 4;
+    musicButton.has_toggle = true;
+    musicButton.toggled = !FlxG.sound.muted;
+    uiGroup.add(musicButton);
+  }
+
+  private function toggleMusic() {
+    FlxG.sound.toggleMuted();
+    musicButton.toggled = !FlxG.sound.muted;
+    FlxG.save.data.music = musicButton.toggled;
+    FlxG.save.flush();
   }
 
   private function restart() {
@@ -97,6 +113,13 @@ class PlayState extends FlxState {
         }
       }
     }
+
+    if (over && FlxG.mouse.justPressed) {
+      if (currentLevel + 1 < Levels.COUNT) {
+        currentLevel++;
+        FlxG.switchState(new PlayState());
+      }
+    }
   }
 
   private function pour(from: BeakerSprite, to: BeakerSprite) {
@@ -117,9 +140,6 @@ class PlayState extends FlxState {
     }
     trace('Won level $currentLevel');
     over = true;
-    if (currentLevel + 1 < Levels.COUNT) {
-      currentLevel++;
-      FlxG.switchState(new PlayState());
-    }
+    add(new Book(level.completionText));
   }
 }
