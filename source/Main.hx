@@ -23,6 +23,7 @@ class Main extends Sprite {
       FlxG.camera.pixelPerfectRender = true;
     });
     FlxG.autoPause = false;
+    FlxG.mouse.useSystemCursor = true;
     loadSettings();
 #if neko
     FlxG.plugins.add(new DebugKeys());

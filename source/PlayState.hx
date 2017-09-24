@@ -153,8 +153,8 @@ class PlayState extends FlxState {
     item.animation.add("item", [level.itemIndex]);
     item.animation.play("item");
     item.scale.set(4, 4);
-    item.x = beaker.x + beaker.width / 2 - item.scale.x * item.width / 2;
-    item.y = beaker.y + beaker.height / 2 - item.scale.y * item.height / 2;
+    item.x = beaker.x + beaker.width / 2 - item.width / 2;
+    item.y = beaker.y + beaker.height / 2 - item.height / 2;
     FlxTween.tween(item, {
           x: FlxG.width / 2 - 20 - 110 / 2 - item.width / 2,
           y: FlxG.height / 2 - item.height / 2
