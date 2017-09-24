@@ -94,12 +94,13 @@ class BeakerSprite extends FlxGroup {
     var pureMetal = beaker.content.pureMetal();
     if (pureMetal != null) {
       text = new FlxText(pureMetal.name, 8);
+      text.setFormat(AssetPaths.PixeligCursief__ttf, 10);
       text.text = pureMetal.name;
       text.color = FlxColor.BLACK;
       var w = Std.int(text.width - 2);
       var h = Std.int(text.height);
-      text.offset.x = 0.5 * (glass.width - w);
-      text.offset.y = 0.5 * (glass.height - h);
+      text.offset.x = -0.5 * (glass.width - w);
+      text.offset.y = -0.5 * (glass.height - h);
 
       label = new FlxSprite(text.x, text.y);
       label.makeGraphic(w, h, FlxColor.WHITE);
