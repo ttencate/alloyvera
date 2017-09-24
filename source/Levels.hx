@@ -22,6 +22,10 @@ class Levels {
   public static var CANARIUM = new Metal("canarium", 0xffffef00);
   public static var FERRARIUM = new Metal("ferrarium", 0xffff2800);
 
+  public static var ROTTIUM = new Metal("rottium", 0xff556b2f);
+  public static var DECAYIUM = new Metal("decayium", 0xff483c32);
+  public static var DECOMPOSIUM = new Metal("decomposium", 0xff560319);
+
   public static var ALL: Array<Level> = [
     {
       instructions: null,
@@ -75,6 +79,21 @@ class Levels {
       goal: new Goal(new Alloy().set(FERRARIUM, 3).set(CARROTIUM, 2).set(CANARIUM, 1)),
       itemIndex: 3,
       completionText: "You have created\n\nNONSENSICUM\n\nalthough you are not sure why.\n\nWith these kinds of experiments, one can never tell what good they will bring.",
+    },
+
+    {
+      instructions: null,
+      startState: new State([
+        new Beaker(10, new Alloy().set(ROTTIUM, 10)),
+        new Beaker(9, new Alloy().set(DECAYIUM, 9)),
+        new Beaker(9, new Alloy().set(DECOMPOSIUM, 9)),
+        new Beaker(5),
+        new Beaker(4),
+        new Beaker(4),
+      ]),
+      goal: new Goal(new Alloy().set(ROTTIUM, 2).set(DECAYIUM, 2).set(DECOMPOSIUM, 1)),
+      itemIndex: 4,
+      completionText: "You have created\n\nMIASMA\n\nIt smells terrible, but allegedly it helps to keep dwarves away. Who'd have thought?",
     },
   ];
 
