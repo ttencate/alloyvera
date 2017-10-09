@@ -34,7 +34,7 @@ class Alloy {
   }
 
   public function take(amount: Float) {
-    var f = amount / this.amount;
+    var f = this.amount == 0 ? 0 : amount / this.amount;
     var taken = new Alloy();
     for (i in 0...metals.length) {
       var metal = metals[i];
